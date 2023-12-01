@@ -29,7 +29,7 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.reply("i am all in one assistance of ava!");
   }
   if (interaction.commandName === "hi, there!") {
-    await interaction.reply("hello!");
+    await interaction.reply("hello, how are you!");
   }
   if (interaction.commandName === "how_may_i_help_you") {
     await interaction.reply(
