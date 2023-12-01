@@ -5,7 +5,7 @@ dotenv.config();
 
 const commands = [
   {
-    name: "hi",
+    name: "hi, there!",
     description: "intro",
   },
   {
@@ -17,6 +17,28 @@ const commands = [
     description: "question",
   },
 ];
+
+client.on("ready", () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+
+  if (interaction.commandName === "who_are_you") {
+    await interaction.reply("i am all in one assistance of ava!");
+  }
+  if (interaction.commandName === "hi, there!") {
+    await interaction.reply("hello!");
+  }
+  if (interaction.commandName === "how_may_i_help_you") {
+    await interaction.reply(
+      "please raise a ticket for better resolution from our team thank you!"
+    );
+  }
+});
+
+client.login(process.env.TOKEN);
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
@@ -31,23 +53,3 @@ try {
 } catch (error) {
   console.error(error);
 }
-
-client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-});
-
-client.on("interactionCreate", async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-
-  if (interaction.commandName === "who_are_you") {
-    await interaction.reply("i am all in one assistance of ava!");
-  }
-  if (interaction.commandName === "hi") {
-    await interaction.reply("hello!");
-  }
-  if (interaction.commandName === "how_may_i_help_you?") {
-    await interaction.reply("please raise a ticket for better resolution from our team thank you!");
-  }
-});
-
-client.login(process.env.TOKEN);
