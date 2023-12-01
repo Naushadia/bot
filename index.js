@@ -5,7 +5,7 @@ dotenv.config();
 
 const commands = [
   {
-    name: "hi, there!",
+    name: "hi_there",
     description: "intro",
   },
   {
