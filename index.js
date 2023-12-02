@@ -2,7 +2,7 @@ import { REST, Routes, Client, GatewayIntentBits } from "discord.js";
 import dotenv from "dotenv";
 import http from "http";
 http
-  .createServer((res) => {
+  .createServer((req, res) => {
     res.statusCode = 200;
     res.setHeader("Content-Type", "text/plain");
     res.end("Hello, World!\n");
@@ -34,7 +34,7 @@ client.on("ready", () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  console.log(interaction.user,"created");
+  console.log(interaction.user);
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === "who_are_you") {
