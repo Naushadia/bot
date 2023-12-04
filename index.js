@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits } from "discord.js";
+import { mongoose } from "mongoose";
 import dotenv from "dotenv";
 import http from "http";
 import command from "../discord/command.js";
@@ -14,6 +15,8 @@ http
   });
 
 dotenv.config();
+const conn = await mongoose.createConnection(process.env.MONGO_URI);
+const us = await conn.collection("users");
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -27,14 +30,20 @@ client.on("ready", () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  console.log(interaction.user);
+  const user = await us.findOne({ discordId: interaction.user.id });
+  if (user === null) {
+    await interaction.reply(
+      `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
+    );
+    return;
+  }
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === "who_are_you") {
     await interaction.reply("i am all in one assistance of ava!");
   }
   if (interaction.commandName === "hi_there") {
-    await interaction.reply("hello, how are you!");
+    await interaction.reply(`hello, how are you! ${user.firstName}`);
   }
   if (interaction.commandName === "how_may_i_help_you") {
     await interaction.reply(
@@ -43,10 +52,16 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 client.on("messageCreate", async (message) => {
-  console.log(message, "message");
   // Ignore messages from bots or without prefix
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
+  const user = await us.findOne({ discordId: message.author.id });
+  if (user === null) {
+    await message.channel.send(
+      `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
+    );
+    return;
+  }
 
   // Get the command name and arguments from the message
   // const args = message.content.slice(1).trim().split(/ +/);
@@ -58,7 +73,7 @@ client.on("messageCreate", async (message) => {
     await message.channel.send("I am all in one assistance of ava!");
   }
   if (commandName === "hi there") {
-    await message.channel.send("Hello, how are you!");
+    await message.channel.send(`Hello, how are you! ${user.firstName}`);
   }
   if (commandName === "how may i help you") {
     await message.channel.send(
