@@ -25,17 +25,22 @@ const client = new Client({
   ],
 });
 
+const uid = [];
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on("interactionCreate", async (interaction) => {
-  const user = await us.findOne({ discordId: interaction.user.id });
-  if (user === null) {
-    await interaction.reply(
-      `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
-    );
-    return;
+  if (!uid.includes(interaction.user.id)) {
+    console.log("yes", uid);
+    const user = await us.findOne({ discordId: interaction.user.id });
+    if (user === null) {
+      await interaction.reply(
+        `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
+      );
+      return;
+    }
+    uid.push(interaction.user.id);
   }
   if (!interaction.isChatInputCommand()) return;
 
@@ -43,7 +48,9 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.reply("i am all in one assistance of ava!");
   }
   if (interaction.commandName === "hi_there") {
-    await interaction.reply(`hello, how are you! ${user.firstName}`);
+    await interaction.reply(
+      `hello, how are you ${interaction.user.globalName} ?`
+    );
   }
   if (interaction.commandName === "how_may_i_help_you") {
     await interaction.reply(
@@ -55,14 +62,17 @@ client.on("messageCreate", async (message) => {
   // Ignore messages from bots or without prefix
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
-  const user = await us.findOne({ discordId: message.author.id });
-  if (user === null) {
-    await message.channel.send(
-      `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
-    );
-    return;
+  if (!uid.includes(message.author.id)) {
+    console.log("yes", uid);
+    const user = await us.findOne({ discordId: message.author.id });
+    if (user === null) {
+      await message.channel.send(
+        `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
+      );
+      return;
+    }
+    uid.push(message.author.id);
   }
-
   // Get the command name and arguments from the message
   // const args = message.content.slice(1).trim().split(/ +/);
   // const commandName = args.shift().toLowerCase();
@@ -73,7 +83,9 @@ client.on("messageCreate", async (message) => {
   //   await message.channel.send("I am all in one assistance of ava!");
   // }
   // if (commandName === "hi there") {
-  await message.channel.send(`Hello, how are you ${user.firstName} ?`);
+  await message.channel.send(
+    `Hello, how are you ${message.author.globalName} ?`
+  );
   // }
   // if (commandName === "how may i help you") {
   //   await message.channel.send(
