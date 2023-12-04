@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits } from "discord.js";
 import { mongoose } from "mongoose";
 import dotenv from "dotenv";
 import http from "http";
-import command from "../discord/command.js";
+import command from "./command.js";
 command();
 http
   .createServer((req, res) => {
@@ -73,7 +73,7 @@ client.on("messageCreate", async (message) => {
   //   await message.channel.send("I am all in one assistance of ava!");
   // }
   // if (commandName === "hi there") {
-    await message.channel.send(`Hello, how are you ${user.firstName} ?`);
+  await message.channel.send(`Hello, how are you ${user.firstName} ?`);
   // }
   // if (commandName === "how may i help you") {
   //   await message.channel.send(
