@@ -67,19 +67,19 @@ client.on("messageCreate", async (message) => {
   // const args = message.content.slice(1).trim().split(/ +/);
   // const commandName = args.shift().toLowerCase();
 
-  const commandName = message.content;
+  // const commandName = message.content;
 
-  if (commandName === "who are you") {
-    await message.channel.send("I am all in one assistance of ava!");
-  }
-  if (commandName === "hi there") {
-    await message.channel.send(`Hello, how are you! ${user.firstName}`);
-  }
-  if (commandName === "how may i help you") {
-    await message.channel.send(
-      "please raise a ticket for better resolution from our team thank you!"
-    );
-  }
+  // if (commandName === "who are you") {
+  //   await message.channel.send("I am all in one assistance of ava!");
+  // }
+  // if (commandName === "hi there") {
+    await message.channel.send(`Hello, how are you ${user.firstName} ?`);
+  // }
+  // if (commandName === "how may i help you") {
+  //   await message.channel.send(
+  //     "please raise a ticket for better resolution from our team thank you!"
+  //   );
+  // }
 });
 
 client.login(process.env.TOKEN);
