@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from "discord.js";
+import client from "./client.js";
 import { mongoose } from "mongoose";
 import dotenv from "dotenv";
 import http from "http";
@@ -17,13 +17,6 @@ http
 dotenv.config();
 const conn = await mongoose.createConnection(process.env.MONGO_URI);
 const us = await conn.collection("users");
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-});
 
 const uid = [];
 client.on("ready", () => {
