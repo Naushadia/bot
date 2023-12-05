@@ -10,8 +10,8 @@ http
     res.setHeader("Content-Type", "text/plain");
     res.end("Hello, World!\n");
   })
-  .listen(4000, () => {
-    console.log(`Server running at 3000`);
+  .listen(process.env.PORT, () => {
+    console.log(`Server running at ${process.env.PORT}`);
   });
 
 dotenv.config();
@@ -52,7 +52,7 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 client.on("messageCreate", async (message) => {
-  // Ignore messages from bots or without prefix
+  console.log(message);
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
   if (!uid.includes(message.author.id)) {
