@@ -25,7 +25,7 @@ client.on("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   if (!uid.includes(interaction.user.id)) {
-    console.log("yes", uid);
+    console.log(uid);
     const user = await us.findOne({ discordId: interaction.user.id });
     if (user === null) {
       await interaction.reply(
@@ -52,11 +52,10 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 client.on("messageCreate", async (message) => {
-  console.log(message);
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
   if (!uid.includes(message.author.id)) {
-    console.log("yes", uid);
+    console.log(uid);
     const user = await us.findOne({ discordId: message.author.id });
     if (user === null) {
       await message.channel.send(
@@ -76,6 +75,7 @@ client.on("messageCreate", async (message) => {
   //   await message.channel.send("I am all in one assistance of ava!");
   // }
   // if (commandName === "hi there") {
+  // message.author.send('hello')
   await message.channel.send(
     `Hello, how are you ${message.author.globalName} ?`
   );
