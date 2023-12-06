@@ -76,9 +76,34 @@ client.on("messageCreate", async (message) => {
   // }
   // if (commandName === "hi there") {
   // message.author.send('hello')
-  await message.channel.send(
-    `Hello, how are you ${message.author.globalName} ?`
-  );
+  switch (message.guildId) {
+    case null: {
+      await message.channel.send(
+        `Hello, how are you ${message.author.globalName} ?`
+      )
+    }
+      break;
+    default: {
+      //  const user = message.mentions.users.filter( async (element) => {
+      //     return element.id === process.env.CLIENT_ID
+      //   });
+      switch (message.mentions.has(process.env.CLIENT_ID)) {
+        case true: {
+          await message.channel.send(
+            `Hello, how are you ${message.author.globalName} ?`
+          )
+        }
+          break;
+        default: {
+          const messages = await message.channel.messages.fetch({ limit: 3 });
+          (((messages.last(1)[0].author.id === message.author.id) || (messages.last(1)[0].author.id === process.env.CLIENT_ID)) && ((messages.last(2)[0].author.id === message.author.id) || (messages.last(2)[0].author.id === process.env.CLIENT_ID))) ?
+            await message.channel.send(
+              `Hello, how are you ${message.author.globalName} ?`
+            ) : null
+        }
+      }
+    }
+  }
   // }
   // if (commandName === "how may i help you") {
   //   await message.channel.send(
