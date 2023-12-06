@@ -42,7 +42,7 @@ client.on("interactionCreate", async (interaction) => {
   }
   if (interaction.commandName === "hi_there") {
     await interaction.reply(
-      `hello, how are you ${interaction.user.globalName} ?`
+      `hello, how are you ${interaction.user.username} ?`
     );
   }
   if (interaction.commandName === "how_may_i_help_you") {
@@ -65,6 +65,7 @@ client.on("messageCreate", async (message) => {
     }
     uid.push(message.author.id);
   }
+  if (!(message.mentions.has(process.env.CLIENT_ID)) && (message.mentions.users.size > 0)) return;
   // Get the command name and arguments from the message
   // const args = message.content.slice(1).trim().split(/ +/);
   // const commandName = args.shift().toLowerCase();
@@ -79,7 +80,7 @@ client.on("messageCreate", async (message) => {
   switch (message.guildId) {
     case null: {
       await message.channel.send(
-        `Hello, how are you ${message.author.globalName} ?`
+        `Hello, how are you ${message.author.username} ?`
       )
     }
       break;
@@ -90,7 +91,7 @@ client.on("messageCreate", async (message) => {
       switch (message.mentions.has(process.env.CLIENT_ID)) {
         case true: {
           await message.channel.send(
-            `Hello, how are you ${message.author.globalName} ?`
+            `Hello, how are you ${message.author.username} ?`
           )
         }
           break;
@@ -98,7 +99,7 @@ client.on("messageCreate", async (message) => {
           const messages = await message.channel.messages.fetch({ limit: 3 });
           (((messages.last(1)[0].author.id === message.author.id) || (messages.last(1)[0].author.id === process.env.CLIENT_ID)) && ((messages.last(2)[0].author.id === message.author.id) || (messages.last(2)[0].author.id === process.env.CLIENT_ID))) ?
             await message.channel.send(
-              `Hello, how are you ${message.author.globalName} ?`
+              `Hello, how are you ${message.author.username} ?`
             ) : null
         }
       }
