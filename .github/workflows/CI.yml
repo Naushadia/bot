@@ -37,6 +37,7 @@ jobs:
             unzip -o /home/ubuntu/bot/discord.zip -d /home/ubuntu/bot_deploy
             cd /home/ubuntu/bot_deploy
             npm install
+            sudo npm install -g pm2
             export CLIENT_ID=${{ vars.CLIENT_ID }}
             export MONGO_URI=${{ vars.MONGO_URI }}
             export SIGNUP=${{ vars.SIGNUP }}
