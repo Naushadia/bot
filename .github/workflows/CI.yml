@@ -23,7 +23,6 @@ jobs:
           debug: true
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
           source: discord.zip
           target: /home/ubuntu/bot
@@ -33,7 +32,6 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
           key: ${{ secrets.KEY }}
           script: |
             unzip -o /home/ubuntu/bot/discord.zip -d /home/ubuntu/bot_deploy
