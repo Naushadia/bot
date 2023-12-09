@@ -41,5 +41,5 @@ jobs:
             export MONGO_URI=${{ vars.MONGO_URI }}
             export SIGNUP=${{ vars.SIGNUP }}
             export TOKEN=${{ vars.TOKEN }}
-            npx pm2 restart index.js --update-env
+            npx pm2 start index.js --update-env
 
