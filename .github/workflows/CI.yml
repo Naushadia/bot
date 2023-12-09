@@ -1,0 +1,43 @@
+name: Node.js CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Copy to EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          debug: true
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.KEY }}
+          source: deploy.zip
+          target: /home/ubuntu/deploy
+
+      - name: Execute on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          port: ${{ secrets.PORT }}
+          key: ${{ secrets.KEY }}
+          script: |
+            unzip -o /home/ubuntu/deploy/deploy.zip -d /home/ubuntu/bot
+            cd /home/ubuntu/bot
+            npm install
+            npx pm2 restart index.js
+
