@@ -24,6 +24,7 @@ client.on("ready", () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
+  message.channel.sendTyping();
   if (!uid.includes(interaction.user.id)) {
     console.log(uid);
     const user = await us.findOne({ discordId: interaction.user.id });
@@ -54,6 +55,7 @@ client.on("interactionCreate", async (interaction) => {
 client.on("messageCreate", async (message) => {
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
+  message.channel.sendTyping();
   if (!uid.includes(message.author.id)) {
     console.log(uid);
     const user = await us.findOne({ discordId: message.author.id });
@@ -75,8 +77,6 @@ client.on("messageCreate", async (message) => {
   // if (commandName === "who are you") {
   //   await message.channel.send("I am all in one assistance of ava!");
   // }
-  // if (commandName === "hi there") {
-  // message.author.send('hello')
   switch (message.guildId) {
     case null: {
       await message.channel.send(
@@ -90,9 +90,18 @@ client.on("messageCreate", async (message) => {
       //   });
       switch (message.mentions.has(process.env.CLIENT_ID)) {
         case true: {
-          await message.channel.send(
-            `Hello, how are you ${message.author.username} ?`
-          )
+          if (message.channel.type === 11) {
+            await message.channel.send(
+              `Hello, how are you ${message.author.username} ?`
+            )
+          } else {
+            const thread = await message.startThread({
+              name: `${message.content}`,
+            });
+            await thread.send(
+              `Hello, how are you ${message.author.username} ?`
+            )
+          }
         }
           break;
         default: {
@@ -105,12 +114,6 @@ client.on("messageCreate", async (message) => {
       }
     }
   }
-  // }
-  // if (commandName === "how may i help you") {
-  //   await message.channel.send(
-  //     "please raise a ticket for better resolution from our team thank you!"
-  //   );
-  // }
 });
 
 client.login(process.env.TOKEN);
