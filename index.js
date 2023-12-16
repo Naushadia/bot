@@ -24,9 +24,7 @@ client.on("ready", () => {
 });
 
 client.on("interactionCreate", async (interaction) => {
-  message.channel.sendTyping();
   if (!uid.includes(interaction.user.id)) {
-    console.log(uid);
     const user = await us.findOne({ discordId: interaction.user.id });
     if (user === null) {
       await interaction.reply(
@@ -55,11 +53,10 @@ client.on("interactionCreate", async (interaction) => {
 client.on("messageCreate", async (message) => {
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
-  message.channel.sendTyping();
   if (!uid.includes(message.author.id)) {
-    console.log(uid);
     const user = await us.findOne({ discordId: message.author.id });
     if (user === null) {
+      message.channel.sendTyping();
       await message.channel.send(
         `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
       );
@@ -79,11 +76,13 @@ client.on("messageCreate", async (message) => {
   // }
   switch (message.guildId) {
     case null: {
+
+      message.channel.sendTyping();
       await message.channel.send(
         `Hello, how are you ${message.author.username} ?`
       )
+      return
     }
-      break;
     default: {
       //  const user = message.mentions.users.filter( async (element) => {
       //     return element.id === process.env.CLIENT_ID
@@ -91,25 +90,35 @@ client.on("messageCreate", async (message) => {
       switch (message.mentions.has(process.env.CLIENT_ID)) {
         case true: {
           if (message.channel.type === 11) {
+
+            message.channel.sendTyping();
             await message.channel.send(
               `Hello, how are you ${message.author.username} ?`
             )
+            return
           } else {
+
+            message.channel.sendTyping();
             const thread = await message.startThread({
               name: `${message.content}`,
             });
             await thread.send(
               `Hello, how are you ${message.author.username} ?`
             )
+            return
           }
         }
-          break;
         default: {
           const messages = await message.channel.messages.fetch({ limit: 3 });
-          (((messages.last(1)[0].author.id === message.author.id) || (messages.last(1)[0].author.id === process.env.CLIENT_ID)) && ((messages.last(2)[0].author.id === message.author.id) || (messages.last(2)[0].author.id === process.env.CLIENT_ID))) ?
+          if (((messages.last(1)[0].author.id === message.author.id) || (messages.last(1)[0].author.id === process.env.CLIENT_ID)) && ((messages.last(2)[0].author.id === message.author.id) || (messages.last(2)[0].author.id === process.env.CLIENT_ID))) {
+            message.channel.sendTyping();
             await message.channel.send(
               `Hello, how are you ${message.author.username} ?`
-            ) : null
+            )
+            return
+          } else {
+            return
+          }
         }
       }
     }
