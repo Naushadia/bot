@@ -1,8 +1,8 @@
 import client from "./client.js";
-import { mongoose } from "mongoose";
 import dotenv from "dotenv";
 import http from "http";
 import command from "./command.js";
+import { db } from "./firestore.js";
 command();
 http
   .createServer((req, res) => {
@@ -15,24 +15,20 @@ http
   });
 
 dotenv.config();
-const conn = await mongoose.createConnection(process.env.MONGO_URI);
-const us = await conn.collection("users");
-
-const uid = [];
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on("interactionCreate", async (interaction) => {
-  if (!uid.includes(interaction.user.id)) {
-    const user = await us.findOne({ discordId: interaction.user.id });
-    if (user === null) {
-      await interaction.reply(
-        `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
-      );
-      return;
-    }
-    uid.push(interaction.user.id);
+  const users = db.collection('users').doc('DisId');
+  const data = await users.get();
+  const match = data.data();
+  const disid = match[`${interaction.user.id}`];
+  if (disid === undefined) {
+    await interaction.reply(
+      `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
+    );
+    return;
   }
   if (!interaction.isChatInputCommand()) return;
 
@@ -53,16 +49,16 @@ client.on("interactionCreate", async (interaction) => {
 client.on("messageCreate", async (message) => {
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
-  if (!uid.includes(message.author.id)) {
-    const user = await us.findOne({ discordId: message.author.id });
-    if (user === null) {
-      message.channel.sendTyping();
-      await message.channel.send(
-        `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
-      );
-      return;
-    }
-    uid.push(message.author.id);
+  const users = db.collection('users').doc('DisId');
+  const data = await users.get();
+  const match = data.data();
+  const disid = match[`${message.author.id}`];
+  if (disid === undefined) {
+    message.channel.sendTyping();
+    await message.channel.send(
+      `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
+    );
+    return;
   }
   if (!(message.mentions.has(process.env.CLIENT_ID)) && (message.mentions.users.size > 0)) return;
   // Get the command name and arguments from the message
