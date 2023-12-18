@@ -47,7 +47,7 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 client.on("messageCreate", async (message) => {
-  message.guildId !== null ? message.channel.setRateLimitPerUser(5) : null
+  message.guildId !== null ? message.channel.setRateLimitPerUser(3) : null
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) {
     message.channel.setRateLimitPerUser(0); return
