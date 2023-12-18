@@ -49,7 +49,9 @@ client.on("interactionCreate", async (interaction) => {
 client.on("messageCreate", async (message) => {
   message.guildId !== null ? message.channel.setRateLimitPerUser(5) : null
   // if (message.author.bot || !message.content.startsWith("?")) return;
-  if (message.author.bot) return;
+  if (message.author.bot) {
+    message.channel.setRateLimitPerUser(0); return
+  };
   const users = db.collection('users').doc('DisId');
   const data = await users.get();
   const match = data.data();
@@ -63,7 +65,8 @@ client.on("messageCreate", async (message) => {
     message.channel.setRateLimitPerUser(0);
     return;
   }
-  if (!(message.mentions.has(process.env.CLIENT_ID)) && (message.mentions.users.size > 0)) return;
+  if (!(message.mentions.has(process.env.CLIENT_ID)) && (message.mentions.users.size > 0)) {
+    message.channel.setRateLimitPerUser(0);return};
   // Get the command name and arguments from the message
   // const args = message.content.slice(1).trim().split(/ +/);
   // const commandName = args.shift().toLowerCase();
@@ -119,6 +122,7 @@ client.on("messageCreate", async (message) => {
             message.channel.setRateLimitPerUser(0);
             return
           } else {
+            message.channel.setRateLimitPerUser(0);
             return
           }
         }
