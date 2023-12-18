@@ -47,18 +47,20 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 client.on("messageCreate", async (message) => {
+  message.guildId !== null ? message.channel.setRateLimitPerUser(5) : null
   // if (message.author.bot || !message.content.startsWith("?")) return;
   if (message.author.bot) return;
   const users = db.collection('users').doc('DisId');
   const data = await users.get();
   const match = data.data();
   const disid = match[`${message.author.id}`];
-  console.log(disid,"userId");
+  console.log(disid, "userId");
   if (disid === undefined) {
     message.channel.sendTyping();
     await message.channel.send(
       `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
     );
+    message.channel.setRateLimitPerUser(0);
     return;
   }
   if (!(message.mentions.has(process.env.CLIENT_ID)) && (message.mentions.users.size > 0)) return;
@@ -92,6 +94,7 @@ client.on("messageCreate", async (message) => {
             await message.channel.send(
               `Hello, how are you ${message.author.username} ?`
             )
+            message.channel.setRateLimitPerUser(0);
             return
           } else {
 
@@ -102,6 +105,7 @@ client.on("messageCreate", async (message) => {
             await thread.send(
               `Hello, how are you ${message.author.username} ?`
             )
+            message.channel.setRateLimitPerUser(0);
             return
           }
         }
@@ -112,6 +116,7 @@ client.on("messageCreate", async (message) => {
             await message.channel.send(
               `Hello, how are you ${message.author.username} ?`
             )
+            message.channel.setRateLimitPerUser(0);
             return
           } else {
             return
