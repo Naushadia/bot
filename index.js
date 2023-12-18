@@ -53,6 +53,7 @@ client.on("messageCreate", async (message) => {
   const data = await users.get();
   const match = data.data();
   const disid = match[`${message.author.id}`];
+  console.log(disid,"userId");
   if (disid === undefined) {
     message.channel.sendTyping();
     await message.channel.send(
