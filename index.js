@@ -56,17 +56,15 @@ client.on("messageCreate", async (message) => {
   const data = await users.get();
   const match = data.data();
   const disid = match[`${message.author.id}`];
-  console.log(disid, "userId");
   if (disid === undefined) {
     message.channel.sendTyping();
     await message.channel.send(
       `you seems to be new user kindly please signup! ${process.env.SIGNUP}`
     );
-    message.channel.setRateLimitPerUser(0);
     return;
   }
   if (!(message.mentions.has(process.env.CLIENT_ID)) && (message.mentions.users.size > 0)) {
-    message.channel.setRateLimitPerUser(0); return
+    return
   };
   // Get the command name and arguments from the message
   // const args = message.content.slice(1).trim().split(/ +/);
